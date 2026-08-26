@@ -10,6 +10,5 @@
     "better-tailwindcss": {
       "entryPoint": "src/app/styles/index.css"
     }
-  },
-  "ignorePatterns": [".claude/get-shit-done/**", ".claude/hooks/**"]
+  }
 }

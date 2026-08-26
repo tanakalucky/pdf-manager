@@ -35,14 +35,6 @@
             "command": "bun run format || true"
           }
         ]
-      },
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bun .claude/hooks/gsd-context-monitor.js"
-          }
-        ]
       }
     ],
     "Stop": [
@@ -66,20 +58,6 @@
           }
         ]
       }
-    ],
-    "SessionStart": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bun .claude/hooks/gsd-check-update.js"
-          }
-        ]
-      }
     ]
-  },
-  "statusLine": {
-    "type": "command",
-    "command": "bun .claude/hooks/gsd-statusline.js"
   }
 }
