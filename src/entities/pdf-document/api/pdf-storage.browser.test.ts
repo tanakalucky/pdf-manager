@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from "vitest";
 
 import type { PdfDocument } from "../model/types";
-import { loadAllPdfDocuments, savePdfDocument } from "./pdf-storage";
+import { deleteAllPdfDocuments, loadAllPdfDocuments, savePdfDocument } from "./pdf-storage";
 
 const deleteDatabase = (): Promise<void> =>
   new Promise((resolve, reject) => {
@@ -46,6 +46,21 @@ describe("PDF ストレージ", () => {
     const documents = await loadAllPdfDocuments();
 
     expect(await documents[0].file.text()).toBe("%PDF-1.7 body");
+  });
+
+  it("全削除すると保存済みの PDF がすべて消える", async () => {
+    await savePdfDocument(createPdf("id-1", "深夜の劇場_シナリオ.pdf", 100));
+    await savePdfDocument(createPdf("id-2", "解答編_進行表.pdf", 200));
+
+    await deleteAllPdfDocuments();
+
+    expect(await loadAllPdfDocuments()).toEqual([]);
+  });
+
+  it("保存済みの PDF がなくても全削除はエラーにならない", async () => {
+    await deleteAllPdfDocuments();
+
+    expect(await loadAllPdfDocuments()).toEqual([]);
   });
 
   it("同じ id で保存し直すと上書きされる", async () => {

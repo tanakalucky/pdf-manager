@@ -1,4 +1,5 @@
 import { PdfCard } from "@/entities/pdf-document";
+import { DeleteAllButton } from "@/features/delete-all-pdfs";
 import { DropZone, UploadButton } from "@/features/upload-pdf";
 import { cn } from "@/shared/lib/utils";
 
@@ -9,13 +10,16 @@ interface Props {
   isVisible: boolean;
   onFilesAdded: (files: readonly File[]) => void;
   onOpen: (id: string) => void;
+  onDeleteAll: () => void;
 }
 
-export const PdfListLayer = ({ items, isVisible, onFilesAdded, onOpen }: Props) => {
+export const PdfListLayer = ({ items, isVisible, onFilesAdded, onOpen, onDeleteAll }: Props) => {
   return (
     <div className={cn("h-full flex-col", isVisible ? "flex" : "hidden")}>
       <div className="flex flex-none items-center gap-4 border-b-2 border-divider px-4 py-3">
         <span className="mr-auto font-heading text-lg font-extrabold">PDF Manager</span>
+
+        <DeleteAllButton count={items.length} onConfirm={onDeleteAll} />
 
         <UploadButton onFilesSelected={onFilesAdded} />
       </div>

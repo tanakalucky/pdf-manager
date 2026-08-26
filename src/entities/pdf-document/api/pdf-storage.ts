@@ -58,6 +58,22 @@ export const loadAllPdfDocuments = async (): Promise<readonly PdfDocument[]> => 
   }
 };
 
+export const deleteAllPdfDocuments = async (): Promise<void> => {
+  const db = await openDb();
+
+  try {
+    await new Promise<void>((resolve, reject) => {
+      const transaction = db.transaction(STORE_NAME, "readwrite");
+
+      transaction.objectStore(STORE_NAME).clear();
+      transaction.oncomplete = () => resolve();
+      transaction.onerror = () => reject(toError(transaction.error, "PDF の削除に失敗しました"));
+    });
+  } finally {
+    db.close();
+  }
+};
+
 export const savePdfDocument = async (pdf: PdfDocument): Promise<void> => {
   const db = await openDb();
 

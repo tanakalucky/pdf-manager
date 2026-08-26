@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 
 import {
   createPdfDocuments,
+  deleteAllPdfDocuments,
   loadAllPdfDocuments,
   type PdfDocument,
   renderPdfThumbnail,
@@ -114,5 +115,20 @@ export const usePdfManager = () => {
 
   const backToList = useCallback(() => setActiveId(null), []);
 
-  return { items, activeId, addFiles, openDocument, backToList };
+  const deleteAll = useCallback(async () => {
+    // アンマウントされる iframe の Blob URL を解放する
+    for (const item of items) {
+      if (item.viewerSrc !== null) URL.revokeObjectURL(item.viewerSrc);
+    }
+    setItems([]);
+    setActiveId(null);
+
+    try {
+      await deleteAllPdfDocuments();
+    } catch (error: unknown) {
+      console.error("PDF の削除に失敗しました", error);
+    }
+  }, [items]);
+
+  return { items, activeId, addFiles, openDocument, backToList, deleteAll };
 };

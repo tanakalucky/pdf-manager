@@ -3,7 +3,7 @@ import { PdfListLayer } from "./PdfListLayer";
 import { PdfViewerLayer } from "./PdfViewerLayer";
 
 export const PdfManagerPage = () => {
-  const { items, activeId, addFiles, openDocument, backToList } = usePdfManager();
+  const { items, activeId, addFiles, openDocument, backToList, deleteAll } = usePdfManager();
 
   return (
     <>
@@ -12,6 +12,7 @@ export const PdfManagerPage = () => {
         isVisible={activeId === null}
         onFilesAdded={addFiles}
         onOpen={openDocument}
+        onDeleteAll={deleteAll}
       />
 
       {/*

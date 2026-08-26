@@ -104,6 +104,48 @@ describe("PdfManagerPage", () => {
       .toEqual(["新シナリオ.pdf"]);
   });
 
+  it("全て削除を確認すると一覧と保存内容が空になる", async () => {
+    // Arrange
+    await savePdfDocument(createPdf("id-1", "深夜の劇場_シナリオ.pdf", 100));
+    await savePdfDocument(createPdf("id-2", "解答編_進行表.pdf", 200));
+    const screen = await render(<PdfManagerPage />);
+    await expect
+      .element(screen.getByRole("button", { name: /深夜の劇場_シナリオ\.pdf/ }))
+      .toBeVisible();
+
+    // Act
+    await screen.getByRole("button", { name: "全て削除" }).click();
+    await screen.getByRole("button", { name: "削除する" }).click();
+
+    // Assert
+    await expect.element(screen.getByText(/PDF がまだありません/)).toBeVisible();
+    await expect.poll(async () => await loadAllPdfDocuments()).toEqual([]);
+  });
+
+  it("全て削除をキャンセルすると PDF は残る", async () => {
+    // Arrange
+    await savePdfDocument(createPdf("id-1", "深夜の劇場_シナリオ.pdf", 100));
+    const screen = await render(<PdfManagerPage />);
+    const card = screen.getByRole("button", { name: /深夜の劇場_シナリオ\.pdf/ });
+    await expect.element(card).toBeVisible();
+
+    // Act
+    await screen.getByRole("button", { name: "全て削除" }).click();
+    await screen.getByRole("button", { name: "キャンセル" }).click();
+
+    // Assert
+    await expect.element(card).toBeVisible();
+    expect((await loadAllPdfDocuments()).map((document) => document.name)).toEqual([
+      "深夜の劇場_シナリオ.pdf",
+    ]);
+  });
+
+  it("PDF が1件もないときは全て削除ボタンを押せない", async () => {
+    const screen = await render(<PdfManagerPage />);
+
+    await expect.element(screen.getByRole("button", { name: "全て削除" })).toBeDisabled();
+  });
+
   it("PDF が1件もないときは追加を促すメッセージを表示する", async () => {
     const screen = await render(<PdfManagerPage />);
 
