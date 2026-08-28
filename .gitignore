@@ -106,7 +106,6 @@ Desktop.ini
 test-results/
 playwright-report/
 coverage/
-e2e/.auth/
 
 # Vitest
 coverage

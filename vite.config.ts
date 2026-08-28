@@ -12,7 +12,7 @@ export default defineConfig({
   plugins: [react(), cloudflare(), tailwindcss()],
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "./src"),
+      "@": path.resolve(import.meta.dirname, "./src"),
     },
   },
   test: {
@@ -22,7 +22,7 @@ export default defineConfig({
       {
         resolve: {
           alias: {
-            "@": path.resolve(__dirname, "./src"),
+            "@": path.resolve(import.meta.dirname, "./src"),
           },
         },
         test: {
@@ -33,15 +33,20 @@ export default defineConfig({
         },
       },
       {
+        // projects のインライン設定はルートの plugins を引き継がないため、明示的に指定する
+        plugins: [react(), tailwindcss()],
         resolve: {
           alias: {
-            "@": path.resolve(__dirname, "./src"),
+            "@": path.resolve(import.meta.dirname, "./src"),
           },
         },
         test: {
           include: ["**/*.browser.test.{ts,tsx}"],
           name: "browser",
           globals: true,
+          setupFiles: ["./vitest.setup.browser.ts"],
+          // 表示切り替えを display ユーティリティで行うため CSS の適用が必要
+          css: true,
           browser: {
             screenshotFailures: false,
             enabled: true,

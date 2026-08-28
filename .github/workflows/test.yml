@@ -56,8 +56,6 @@ jobs:
 
       - name: Run tests
         run: bun run test
-        env:
-          DOTENV_PRIVATE_KEY_DEV: ${{ secrets.DOTENV_PRIVATE_KEY_DEV }}
 
       - name: Type check
         run: bun typecheck
